@@ -57,7 +57,8 @@ def create_claim():
         claimNumber = createClaim(response)
 
 
-        if claimNumber is not None:
+        while not claimNumber:
+            print("Claim number is empty, retrying...")
             return jsonify({"claim_number": claimNumber}), 200
 
     except Exception as e:
