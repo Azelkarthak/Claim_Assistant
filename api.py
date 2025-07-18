@@ -57,8 +57,8 @@ def create_claim():
         claimNumber = createClaim(response)
 
 
-
-        return jsonify({"cleaned_body": claimNumber}), 200
+        if claimNumber is not None:
+            return jsonify({"claim_number": claimNumber}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
