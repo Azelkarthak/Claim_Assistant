@@ -280,7 +280,7 @@ def createClaim(response):
     response = requests.request("POST", url, headers=headers, data=payload)
 
     print(response.text)
-    if response.status_code == 200:
+    if 200 <= response.status_code < 300:
         return response.json()
 
 import re
