@@ -52,9 +52,8 @@ def create_claim():
         cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
         
         policy_details = extract_policy_details(cleaned_text)
-        print(f"Policy Details: {policy_details}")
         response = generate_response(cleaned_text, policy_details)
-        
+        print(f"Generated Response: {response}")
         claimNumber = createClaim(response)
 
 
