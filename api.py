@@ -57,9 +57,7 @@ def create_claim():
         claimNumber = createClaim(response)
 
 
-        while not claimNumber:
-            print("Claim number is empty, retrying...")
-            return jsonify({"claim_number": claimNumber}), 200
+        return jsonify({"claim_number": claimNumber}), 200
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
@@ -174,6 +172,7 @@ You will receive:
    eg if addess is not mentioned in the claim description, try to add it from the policy_details object.
    eg if phone number is not mentioned in the claim description, try to add it from the policy_details object.
    eg if losscause are not mentioned in the claim description, keep the default value as glassbreakage.
+8. Loss occured should be a string value, eg "Home"/"At Premises"/"At Work"/ "At Street"
 
 ---
 
