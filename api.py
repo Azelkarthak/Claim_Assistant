@@ -34,33 +34,57 @@ app = Flask(__name__)
 #     except Exception as e:
 #         return jsonify({"error": str(e)}), 500
 
+# 
+
+
 @app.route("/createClaim", methods=["POST"])
 def create_claim():
     try:
-        # Get raw HTML from request
+        # Step 1: Get and clean HTML content
         html_content = request.get_data(as_text=True)
-
-        # Parse and strip tags
         soup = BeautifulSoup(html_content, "html.parser")
         plain_text = soup.get_text(separator=" ")
-
-        # Decode HTML entities (like &nbsp;, &amp;)
         decoded_text = html.unescape(plain_text)
-
-        # Remove all \n, /n, and excessive whitespace
         cleaned_text = re.sub(r'(\\n|/n|\n|\r)', ' ', decoded_text)
         cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
-        
-        policy_details = extract_policy_details(cleaned_text)
-        response = generate_response(cleaned_text, policy_details)
-        print(f"Generated Response: {response}")
-        claimNumber = createClaim(response)
 
+        # Step 2: Extract policy details
+        policy_details, policy_number = extract_policy_details(cleaned_text)
 
-        return jsonify({"claim_number": claimNumber}), 200
+        # Step 3: Retry logic for createClaim
+        for attempt in range(3):
+            print(f"Attempt {attempt + 1} to create claim...")
+
+            # Always regenerate payload before attempt
+            response_payload = generate_response(cleaned_text, policy_details)
+
+            # Call createClaim API
+            createClaimResponse = createClaim(response_payload)
+
+            if createClaimResponse.status_code in [200, 201]:
+                response_json = createClaimResponse.json()
+                claim_number = response_json.get("claimNumber", "N/A")
+
+                return jsonify({
+                    "claimNumber": claim_number,
+                    "policyNumber": policy_number,
+                    "message": "Claim Created Successfully"
+                }), 200
+
+        # If all 3 attempts fail
+        return jsonify({
+            "claimNumber": claim_number,
+            "policyNumber": policy_number,
+            "message": "Failed"
+        }), createClaimResponse.status_code
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({
+            "error": "Exception occurred during claim creation",
+            "message": str(e),
+            "policyNumber": policy_number if 'policy_number' in locals() else None
+        }), 500
+
 
 def generate_response(user_input, policy_details):
     # Load claim template
@@ -264,8 +288,6 @@ def extract_json_from_response(response_data):
     return None
 
 def createClaim(response):
-    import requests
-    import json
 
     url = "http://18.218.57.115:8090/cc/rest/fnol/v1/createFNOL"
 
@@ -279,11 +301,7 @@ def createClaim(response):
     response = requests.request("POST", url, headers=headers, data=payload)
 
     print(response.text)
-    if 200 <= response.status_code < 300:
-        return response.json()
-
-import re
-import requests
+    return response
 
 def extract_policy_details(text):
     # Prompt AI to extract the policy number
@@ -314,11 +332,11 @@ def extract_policy_details(text):
         response.raise_for_status()  # Raises an exception for HTTP 4xx/5xx
 
         print("Response Received:\n", response.text)
-        return response.text
+        return response.text,policy_number
 
     except requests.exceptions.RequestException as e:
         print(f"Error fetching policy details: {e}")
-        return None
+        return None, policy_number
 
 
 if __name__ == '__main__':
