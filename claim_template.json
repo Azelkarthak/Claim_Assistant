@@ -44,39 +44,6 @@
             ]
         }
     ],
-    "PolicyCoverages": [
-        {
-            "Coverage": "",
-            "CoverageType": "",
-            "CoverageSubtype": "",
-            "Claimant_FirstName": "",
-            "Claimant_LastName": "",
-            "ClaimantType": "",
-            "InjuredPerson_FirstName": "",
-            "InjuredPerson_LastName": "",
-            "Loss_Party": ""
-        },
-        {
-            "Coverage": "",
-            "CoverageType": "",
-            "CoverageSubtype": "",
-            "Claimant_FirstName": "",
-            "Claimant_LastName": "",
-            "Vin": ""
-        },
-        {
-            "Coverage": "",
-            "CoverageType": "",
-            "CoverageSubtype": "",
-            "Claimant_FirstName": "",
-            "Claimant_LastName": "",
-            "Property_Country": "",
-            "Property_Address1": "",
-            "Property_City": "",
-            "Property_State": "",
-            "Property_Zipcode": ""
-        }
-    ],
     "Reporter_FirstName": "",
     "Reporter_LastName": "",
     "RelationshipToInsured": "",
