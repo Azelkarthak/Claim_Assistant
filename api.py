@@ -52,6 +52,13 @@ def create_claim():
         policy_details, policy_number = extract_policy_details(cleaned_text)
 
         # Step 3: Retry logic for createClaim
+        if policy_details is None:
+            return jsonify({
+                "claimNumber": "Claim Not Created, Invalid Policy Number",
+                "policyNumber": policy_number,
+                "message": "Policy Number is Invalid or Policy Does Not Exist"
+            }), 400
+        
         for attempt in range(3):
             print(f"Attempt {attempt + 1} to create claim...")
 

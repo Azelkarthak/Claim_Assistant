@@ -2,6 +2,8 @@ import google.generativeai as genai
 from dotenv import load_dotenv
 import os
 import requests
+import time
+import random
 
 # Load environment variables from .env file
 load_dotenv()
@@ -17,7 +19,7 @@ def get_ai_content(
     temperature=0.0,
     top_p=0.95,
     top_k=40,
-    minimum_output_tokens=2000
+    
 ):
     retry_count = 0
 
