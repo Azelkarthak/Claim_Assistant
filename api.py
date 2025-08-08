@@ -42,6 +42,7 @@ def create_claim():
     try:
         # Step 1: Get and clean HTML content
         html_content = request.get_data(as_text=True)
+        print(f"HTML Content: {html_content}")
         soup = BeautifulSoup(html_content, "html.parser")
         plain_text = soup.get_text(separator=" ")
         decoded_text = html.unescape(plain_text)
