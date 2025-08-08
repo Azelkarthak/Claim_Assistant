@@ -76,8 +76,7 @@ def create_claim():
                 return jsonify({
                     "claimNumber": claim_number,
                     "policyNumber": policy_number,
-                    "message": "Claim Created Successfully"
-                }), 200
+                    "message": html_content                }), 200
 
         # If all 3 attempts fail
         return jsonify({
