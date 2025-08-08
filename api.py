@@ -44,7 +44,8 @@ def create_claim():
         conversation_id = request.headers.get("ConversationID")
         if not conversation_id and request.is_json:
             conversation_id = request.json.get("ConversationID")
-            
+        
+        print(f"Conversation ID: {conversation_id}")
         # Step 1: Get and clean HTML content
         html_content = request.get_data(as_text=True)
         print(f"HTML Content: {html_content}")
